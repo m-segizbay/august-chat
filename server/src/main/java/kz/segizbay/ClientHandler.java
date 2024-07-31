@@ -10,6 +10,7 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private Server server;
+    private String username;
 
 
     public ClientHandler(Server server, Socket socket) throws IOException {
@@ -22,7 +23,16 @@ public class ClientHandler {
             try {
                 while(true){
                     String msg = in.readUTF();
-                    server.broadcastMessage(msg);
+                    if (msg.startsWith("/login ")){
+                        username = msg.split("\\s+")[1];
+                        sendMessage("/login_ok " + username);
+                        break;
+                    }
+                }
+
+                while(true){
+                    String msg = in.readUTF();
+                    server.broadcastMessage(username + ": " + msg);
                 }
             } catch (IOException e){
                 e.printStackTrace();
