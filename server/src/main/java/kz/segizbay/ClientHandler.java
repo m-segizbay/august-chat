@@ -9,11 +9,8 @@ public class ClientHandler {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
-    private Server server;
 
-    public ClientHandler(Server server,Socket socket) throws IOException {
         this.socket = socket;
-        this.server = server;
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
         System.out.println("Client connected");
@@ -22,7 +19,6 @@ public class ClientHandler {
             try {
                 while(true){
                     String msg = in.readUTF();
-                    server.broadcastMessage(msg);
                 }
             } catch (IOException e){
                 e.printStackTrace();
@@ -32,17 +28,11 @@ public class ClientHandler {
         }).start();
     }
 
-    public void sendMessage(String msg) throws IOException {
-        out.writeUTF(msg);
-    }
-
     public void disconnect(){
-        server.unsubscribe(this);
         if (socket != null){
             try {
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
