@@ -4,6 +4,7 @@ package kz.segizbay.client;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,7 +16,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller{
+public class Controller implements Initializable {
     @FXML
     private TextField msgField, loginField;
 
@@ -24,6 +25,9 @@ public class Controller{
 
     @FXML
     private HBox textBox, loginBox;
+
+    @FXML
+    private ListView<String> clientList;
 
     private Socket socket;
     private DataInputStream in;
@@ -38,11 +42,15 @@ public class Controller{
             loginBox.setManaged(true);
             textBox.setVisible(false);
             textBox.setManaged(false);
+            clientList.setVisible(false);
+            clientList.setManaged(false);
         } else {
             loginBox.setVisible(false);
             loginBox.setManaged(false);
             textBox.setVisible(true);
             textBox.setManaged(true);
+            clientList.setVisible(true);
+            clientList.setManaged(true);
         }
     }
 
@@ -70,6 +78,7 @@ public class Controller{
                         if (msg.startsWith("/login_ok ")){
                             setUsername(msg.split("\\s+")[1]);
                             msgArea.clear();
+                            clientList.getItems().add("Akniet");
                             break;
                         }
                         if (msg.startsWith("/login_failed ")){
@@ -89,6 +98,7 @@ public class Controller{
                     disconnect();
                 }
             }).start();
+
         } catch (IOException e){
             e.printStackTrace();
             throw new RuntimeException("Unable to connect to server");
@@ -122,5 +132,10 @@ public class Controller{
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setUsername(null);
     }
 }

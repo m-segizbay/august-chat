@@ -50,4 +50,15 @@ public class Server {
         }
         return false;
     }
+
+    public void sendPrivateMsg(ClientHandler client, String receiver, String message){
+        for (ClientHandler c : clients){
+            if (c.getUsername().equals(receiver)) {
+                c.sendMessage("From: " + client.getUsername() + " || Message: " + message);
+                client.sendMessage("Receiver: " + receiver + " || Message: " + message);
+                return;
+            }
+        }
+        client.sendMessage("Server: Unable to send message to " + receiver);
+    }
 }

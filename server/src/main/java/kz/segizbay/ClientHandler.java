@@ -1,5 +1,7 @@
 package kz.segizbay;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +17,7 @@ public class ClientHandler {
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.socket = socket;
+        this.server = server;
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
         System.out.println("Client connected");
@@ -38,6 +41,10 @@ public class ClientHandler {
 
                 while(true){
                     String msg = in.readUTF();
+                    if (msg.startsWith("/")){
+                        executeCmd(msg);
+                        continue;
+                    }
                     server.broadcastMessage(username + ": " + msg);
                 }
             } catch (IOException e){
@@ -69,5 +76,18 @@ public class ClientHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void executeCmd(String msg){
+        if (msg.startsWith("/p ")){
+            String[] tokens = msg.split("\\s+", 3);
+            if (tokens[1].equals(username)){
+                sendMessage("Its your username!!!");
+                return;
+            }
+            server.sendPrivateMsg(this, tokens[1], tokens[2]);
+            return;
+        }
+
     }
 }
