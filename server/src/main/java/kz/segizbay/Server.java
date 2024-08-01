@@ -10,10 +10,12 @@ import java.util.List;
 public class Server {
     private int port;
     private List<ClientHandler> clients;
+    private AuthenticationProvider authProvider;
 
     public Server(int port) {
         this.port = port;
         this.clients = new ArrayList<ClientHandler>();
+        this.authProvider = new InMemoryAuthProvider();
          try(ServerSocket serverSocket = new ServerSocket(port)){
             System.out.println("Сервер запущен на порту 8189. Ожидаем подключение клиента...");
             while(true){
@@ -76,5 +78,9 @@ public class Server {
         for(ClientHandler c : clients){
             c.sendMessage(clientList);
         }
+    }
+
+    public AuthenticationProvider getAuthProvider() {
+        return authProvider;
     }
 }

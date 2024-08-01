@@ -4,10 +4,7 @@ package kz.segizbay.client;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
 import java.io.DataInputStream;
@@ -29,6 +26,10 @@ public class Controller implements Initializable {
 
     @FXML
     private ListView<String> clientList;
+
+    @FXML
+    private PasswordField passwordField;
+
 
     private Socket socket;
     private DataInputStream in;
@@ -127,7 +128,7 @@ public class Controller implements Initializable {
         }
 
         try {
-            out.writeUTF("/login " + loginField.getText());
+            out.writeUTF("/login " + loginField.getText() + " " + passwordField.getText());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

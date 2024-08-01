@@ -14,6 +14,7 @@ public class ClientHandler {
     private DataOutputStream out;
     private Server server;
     private String username;
+    private String password;
 
 
     public ClientHandler(Server server, Socket socket) throws IOException {
@@ -28,12 +29,25 @@ public class ClientHandler {
                 while(true){
                     String msg = in.readUTF();
                     if (msg.startsWith("/login ")){
-                        String usernameFromClient = msg.split("\\s+")[1];
-                        if (server.isUserOnline(usernameFromClient)){
-                            sendMessage("/login_failed this username is already in use: " + usernameFromClient);
+                        String[] tokens = msg.split("\\s+");
+                        if(tokens.length!=3){
+                            sendMessage("Server: Incorrect command");
                             continue;
                         }
-                        username = usernameFromClient;
+                        String login = tokens[1];
+                        String password = tokens[2];
+                        String nick = server.getAuthProvider()
+                                .getUserNameByLoginAndPassword(login, password);
+                        if (nick == null) {
+                            sendMessage("/login_failed Incorrect login or password");
+                            continue;
+                        }
+
+                        if (server.isUserOnline(nick)){
+                            sendMessage("/login_failed this username is already in use: " + nick);
+                            continue;
+                        }
+                        username = nick;
                         sendMessage("/login_ok " + username);
                         server.subscribe(this);
                         break;

@@ -7,7 +7,8 @@
 <?import javafx.scene.text.Font?>
 <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kz.segizbay.client.Controller">
     <HBox fx:id="loginBox">
-        <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="Введите ник"/>
+        <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="Введите логин"/>
+        <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="Введите пароль"/>
         <Button text="Войти" onAction="#login"/>
     </HBox>
     <HBox VBox.vgrow="ALWAYS">
