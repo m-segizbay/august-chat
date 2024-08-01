@@ -17,11 +17,15 @@ public class Server {
             System.out.println("Сервер запущен на порту 8189. Ожидаем подключение клиента...");
             while(true){
                 Socket socket = serverSocket.accept();
-                subscribe(new ClientHandler(this, socket));
+                new ClientHandler(this, socket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<ClientHandler> getClients(){
+        return this.clients;
     }
 
     public void broadcastMessage(String message){
@@ -36,5 +40,14 @@ public class Server {
 
     public void ubsubscribe(ClientHandler client){
         clients.remove(client);
+    }
+
+    public boolean isUserOnline(String username){
+        for(ClientHandler client : clients){
+            if (username.equals(client.getUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

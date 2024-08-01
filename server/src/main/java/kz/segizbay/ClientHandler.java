@@ -24,8 +24,14 @@ public class ClientHandler {
                 while(true){
                     String msg = in.readUTF();
                     if (msg.startsWith("/login ")){
-                        username = msg.split("\\s+")[1];
+                        String usernameFromClient = msg.split("\\s+")[1];
+                        if (server.isUserOnline(usernameFromClient)){
+                            sendMessage("/login_failed this username is already in use: " + usernameFromClient);
+                            continue;
+                        }
+                        username = usernameFromClient;
                         sendMessage("/login_ok " + username);
+                        server.subscribe(this);
                         break;
                     }
                 }
@@ -40,6 +46,10 @@ public class ClientHandler {
                 disconnect();
             }
         }).start();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void sendMessage(String msg){

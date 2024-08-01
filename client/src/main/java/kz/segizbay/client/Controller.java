@@ -30,6 +30,7 @@ public class Controller{
     private DataOutputStream out;
     private String username;
 
+
     public void setUsername(String username){
         this.username = username;
         if (this.username == null){
@@ -68,7 +69,12 @@ public class Controller{
                         String msg = in.readUTF();
                         if (msg.startsWith("/login_ok ")){
                             setUsername(msg.split("\\s+")[1]);
+                            msgArea.clear();
                             break;
+                        }
+                        if (msg.startsWith("/login_failed ")){
+                            String reason = msg.split("\\s+",2)[1];
+                            msgArea.appendText(reason + "\n");
                         }
                     }
 
