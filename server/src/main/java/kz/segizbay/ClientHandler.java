@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 public class ClientHandler {
     private Socket socket;
@@ -63,7 +64,7 @@ public class ClientHandler {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            disconnect();
         }
     }
 

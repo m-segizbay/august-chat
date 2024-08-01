@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Server {
@@ -36,10 +37,12 @@ public class Server {
 
     public void subscribe(ClientHandler client){
         clients.add(client);
+        sendClientList();
     }
 
     public void ubsubscribe(ClientHandler client){
         clients.remove(client);
+        sendClientList();
     }
 
     public boolean isUserOnline(String username){
@@ -60,5 +63,18 @@ public class Server {
             }
         }
         client.sendMessage("Server: Unable to send message to " + receiver);
+    }
+
+
+    public void sendClientList(){
+        StringBuilder builder = new StringBuilder("/clients_list ");
+        for(ClientHandler c : clients){
+            builder.append(c.getUsername()).append(" ");
+        }
+        builder.setLength(builder.length() - 1);
+        String clientList = builder.toString();
+        for(ClientHandler c : clients){
+            c.sendMessage(clientList);
+        }
     }
 }

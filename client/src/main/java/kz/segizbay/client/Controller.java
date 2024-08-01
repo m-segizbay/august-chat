@@ -1,6 +1,7 @@
 package kz.segizbay.client;
 
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -78,7 +79,6 @@ public class Controller implements Initializable {
                         if (msg.startsWith("/login_ok ")){
                             setUsername(msg.split("\\s+")[1]);
                             msgArea.clear();
-                            clientList.getItems().add("Akniet");
                             break;
                         }
                         if (msg.startsWith("/login_failed ")){
@@ -90,6 +90,16 @@ public class Controller implements Initializable {
                     // Цикл общения
                     while(true){
                         String msg = in.readUTF();
+                        if (msg.startsWith("/clients_list ")){
+                            Platform.runLater(() -> {
+                                clientList.getItems().clear();
+                                String[] tokens = msg.split("\\s+");
+                                for (int i = 1; i < tokens.length; i++) {
+                                    clientList.getItems().add(tokens[i]);
+                                }
+                            });
+                            continue;
+                        }
                         msgArea.appendText(msg+"\n");
                     }
                 } catch (IOException e) {
